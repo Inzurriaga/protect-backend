@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 var socket = require('socket.io');
 
-app.locals.title = 'Pet Box';
+app.locals.users = [];
+app.locals.title = "hello im the backend"
 
 app.use(express.json());
 
@@ -20,7 +21,25 @@ app.get('/', (request, response) => {
 
 io.on('connection', function(socket){
   console.log("a user connected");
-  socket.on("what", (msg) => {
-    console.log(msg)
+  socket.on("what", function(data){
+    updateUser(data)
+    io.emit("what", app.locals.users)
   })
 });
+
+// this is for user position and update
+
+function updateUser(data) {
+  const { users } = app.locals
+  const userCheck = users.find( user => user.id === data.id)
+  if(!userCheck){
+    users.push(data)
+  }else{
+    users.map(user => {
+      if(user.id === data.id){
+        return data
+      }
+      return user
+    })
+  }
+}
