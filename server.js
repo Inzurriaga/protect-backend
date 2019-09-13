@@ -35,8 +35,8 @@ function updateUser(data) {
   if(!userCheck){
     users.push(data)
   }else{
-    users.map(user => {
-      if(user.id === data.id){
+    app.locals.users = users.map(user => {
+      if(user.id == data.id){
         return data
       }
       return user
